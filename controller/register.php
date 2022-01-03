@@ -19,9 +19,9 @@ if(isset($_POST["register"])){
             $sql= $db->query("INSERT INTO `users` (`username`, `password`) VALUES ('$username', '$password')");
             header("Location: ../view/login_form.php");
         }
-        else echo "BullShit";    
+        else echo "Password and password confirmation are not the same";    
     }
-    else echo "Pass";
+    else echo "Something is not right with your info, please check it up";
     }
-    else echo "Shit";
+    else echo "Post request is not 'register'";
 }

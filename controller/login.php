@@ -22,11 +22,11 @@ if(isset($_POST["login"])){
                 $_SESSION["session_username"] = $username;
                 header('Location: ../index.php');
             }
-            else echo "bad";
+            else echo "There is no such user";
         }
         else {
             echo "Invalid password or username!";
         }
     }
-    else echo "Shit happened";
+    else echo "Request is not 'Login'";
 }

@@ -27,7 +27,7 @@ $query = $db->query("SELECT * FROM `images` ORDER BY RAND()");
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">   </script>
     <!--<script src="js/sendJSONInfo.js"></script> -->
-    <title>Document</title>
+    <title>Home</title>
 </head>
 
 <body class="bg-dark">
@@ -47,7 +47,7 @@ $query = $db->query("SELECT * FROM `images` ORDER BY RAND()");
         </div>
     </header>
     <?php while($rows = $query->fetch_assoc()): ?>
-    <div class="container">
+    <div class="container" id="<?php echo $rows['id']?>">
         <div class="row justify-content-center">
             <div class="col-12 offset-5">
                 <p class="text-light"><a href="#" class="btn btn-light"
@@ -62,15 +62,15 @@ $query = $db->query("SELECT * FROM `images` ORDER BY RAND()");
         </div>
         <div class="row">
             <div class="col-8">
-                <a class="btn btn-danger" href="#" id="<?php echo $rows['id'] ?>" onclick="likeButton(this);">Like</a>
-            </div>
-            <div>
-            <p class="text-light"><?php
+                <a class="btn btn-danger" href="#" id="<?php echo $rows['id'] ?>" onclick="likeButton(this); return false;">Like</a>
+                <p class="text-light" id="<?php echo $rows['id'] ?>"><?php
             $id = $rows['id'];
             $likesQuery = $db->query("SELECT COUNT(*) AS Count FROM `likes` WHERE `id_photo`='$id'");
             $row = $likesQuery->fetch_array();
             echo $row["Count"];
             ?></p>
+            </div>
+            <div>
             </div>
             <div class="col-8 offset-7">
                 <p class="text-light"> <?php echo $rows['image_date'] ?> </p>
@@ -88,14 +88,12 @@ $query = $db->query("SELECT * FROM `images` ORDER BY RAND()");
 function likeButton(element){
     var imageId=element.id;
     var username=<?php echo json_encode($user); ?>;
-    console.log(username);
-    console.log(element);
     $.ajax({
         type:'POST',
         url:'controller/add_or_delete_like.php',
         data:{"username":username, "imageId":imageId},
         success: function(msg){
-        alert( "Data Saved: " + msg );
+        $("#"+imageId).load(" #"+imageId+" > *");
   }
     })
 }
