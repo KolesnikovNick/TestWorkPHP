@@ -47,36 +47,42 @@ $query = $db->query("SELECT * FROM `images` ORDER BY RAND()");
         </div>
     </header>
     <?php while($rows = $query->fetch_assoc()): ?>
-    <div class="container" id="<?php echo $rows['id']?>">
+    <div class="container mb-5" id="<?php echo $rows['id']?>">
         <div class="row justify-content-center">
             <div class="col-12 offset-5">
-                <p class="text-light"><a href="#" class="btn btn-light"
-                        role="button"><?php echo $rows['image_user'] ?></a>
-                </p>
+                <h5 class="text-light font-weight-bold"><?php echo $rows['image_user'] ?></h5>
             </div>
             <div class="col-12 offset-5">
                 <a href="view/view_other_user_account.php?username=<?php echo $rows['image_user'] ?>">
                 <img src="data:image/jpeg;base64, <?php echo base64_encode($rows['image_data']) ?>"
-                    class="w-50 d-flex shadow-1-strong rounded mb-4" alt="" /></a>
+                    class="w-50 shadow-1-strong rounded mb-4" alt="" /></a>
             </div>
         </div>
         <div class="row">
-            <div class="col-8">
-                <a class="btn btn-danger" href="#" id="<?php echo $rows['id'] ?>" onclick="likeButton(this); return false;">Like</a>
-                <p class="text-light" id="<?php echo $rows['id'] ?>"><?php
+            <div class="col-6">
+                <?php
+                $id_photo=$rows['id'];
+                $querylike = $db->query("SELECT * FROM `likes` WHERE `user_name`='$user' AND `id_photo`='$id_photo'");
+                $numrows = $querylike->num_rows;
+                if($numrows==0): ?>
+                <a class="btn btn-danger" id="<?php echo $rows['id'] ?>" onclick="likeButton(this);">Like</a>
+                <?php endif; ?>
+                <?php if($numrows>0):?>
+                <a class="btn btn-danger" id="<?php echo $rows['id'] ?>" onclick="likeButton(this);">Unlike</a>
+                <?php endif; ?>
+                <p class="text-light" id="<?php echo $rows['id'] ?>">Number of likes: <?php
             $id = $rows['id'];
             $likesQuery = $db->query("SELECT COUNT(*) AS Count FROM `likes` WHERE `id_photo`='$id'");
             $row = $likesQuery->fetch_array();
             echo $row["Count"];
             ?></p>
-            </div>
-            <div>
-            </div>
-            <div class="col-8 offset-7">
+            <div class="col-6">
                 <p class="text-light"> <?php echo $rows['image_date'] ?> </p>
+            </div>
             </div>
         </div>
     </div>
+    <hr style="height:3px; border-width:0; color:white; background-color:white">
     <?php endwhile; ?>
     <footer>
 
